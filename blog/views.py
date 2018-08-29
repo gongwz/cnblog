@@ -51,6 +51,10 @@ def index(request):
     return render(request,"blog/index.html")
 
 
+def register(request):
+    
+    return render(request,"blog/register.html")
+
 
 def get_valid_code_img(request):
     """

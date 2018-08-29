@@ -21,5 +21,6 @@ import blog.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/',blog.views.login),
+    path('register/',blog.views.register),
     re_path(r'^blog/', include('blog.urls'))
 ]
