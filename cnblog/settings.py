@@ -125,8 +125,11 @@ STATICFILES_DIRS = [
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 
 # 与用户上传相关的配置
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 MEDIA_URL = "/media/"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 
 # 更改默认的认证表
 AUTH_USER_MODEL="blog.UserInfo"
@@ -148,3 +151,5 @@ LOGGING = {
         },
     }
 }
+
+LOGIN_URL="/login/"

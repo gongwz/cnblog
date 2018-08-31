@@ -6,10 +6,18 @@ from django.http import JsonResponse
 
 from utils import ValidCode
 
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+from blog.Myforms import UserForm
+from blog.models import UserInfo
 
 def login(request):
+    """
+    登录：图形验证码
+    :param request:
+    :return:
+    """
     
     # render(request,'blog/login.html')
     if request.method == 'POST':
@@ -46,14 +54,69 @@ def login(request):
     return render(request,'blog/login.html')
 
 
+def register(request):
+    """
+    注册视图函数:
+       get请求响应注册页面
+       post(Ajax)请求,校验字段,响应字典
+    :param request:
+    :return:
+    """
+
+    if request.is_ajax():
+        print(request.POST)
+        form = UserForm(request.POST)
+    
+        response = {"user": None, "msg": None}
+        if form.is_valid():
+            response["user"] = form.cleaned_data.get("user")
+        
+            # 生成一条用户纪录
+            user = form.cleaned_data.get("user")
+            print("user", user)
+            pwd = form.cleaned_data.get("pwd")
+            email = form.cleaned_data.get("email")
+            avatar_obj = request.FILES.get("avatar")
+        
+            extra = {}
+            if avatar_obj:
+                extra["avatar"] = avatar_obj
+        
+            UserInfo.objects.create_user(username=user, password=pwd, email=email, **extra)
+    
+        else:
+            print(form.cleaned_data)
+            print(form.errors)
+            response["msg"] = form.errors
+    
+        return JsonResponse(response)
+    
+    form = UserForm()
+    
+    return render(request, "blog/register.html",{"form":form})
+
+
+
+
+@login_required
 def index(request):
     
     return render(request,"blog/index.html")
 
 
-def register(request):
+def logout(request):
+    """
+    注销视图
+    :param request:
+    :return:
+    """
+    auth.logout(request)  # request.session.flush()
+
+    return redirect("/login/")
+
+def agreement(request):
     
-    return render(request,"blog/register.html")
+    return render(request,"blog/agreement.html")
 
 
 def get_valid_code_img(request):

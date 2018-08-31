@@ -15,12 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include,re_path
+from cnblog import  settings
+from django.views.static import serve
 
 import blog.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/',blog.views.login),
+    path('logout/',blog.views.logout),
+    path('index/',blog.views.index),
     path('register/',blog.views.register),
-    re_path(r'^blog/', include('blog.urls'))
+    re_path(r'^blog/', include('blog.urls')),
+    re_path(r'^$',blog.views.index),
+    # media配置:
+    re_path(r"media/(?P<path>.*)$",serve,{"document_root":settings.MEDIA_ROOT}),
 ]
